@@ -26,6 +26,32 @@ internal static class HarmonyPatches
         harmony.Patch(AccessTools.Method(typeof(Thing), nameof(Thing.TakeDamage)), prefix: Patch(nameof(TakeDamage_Prefix), Priority.First));
         harmony.Patch(AccessTools.Method(typeof(Pawn), nameof(Pawn.Kill)), prefix: Patch(nameof(Kill_Prefix), Priority.First));
         harmony.Patch(AccessTools.Method(typeof(Corpse), nameof(Corpse.Kill)), prefix: Patch(nameof(Kill_Prefix), Priority.First));
+
+        // Colonists buried alive are still on the map: don't let the game end (or a map close) over them.
+        try
+        {
+            MethodInfo colonistCount = AccessTools.PropertyGetter(typeof(MapPawns), nameof(MapPawns.FreeColonistsSpawnedOrInPlayerEjectablePodsCount));
+            mapPawnsMap = AccessTools.FieldRefAccess<MapPawns, Map>("map");
+            if (colonistCount != null && mapPawnsMap != null)
+            {
+                harmony.Patch(colonistCount, postfix: Patch(nameof(FreeColonistsCount_Postfix)));
+            }
+        }
+        catch (Exception e)
+        {
+            Log.Warning("[Survive Collapses] Could not make buried colonists count as present; the game may end if every colonist is buried alive. " + e.Message);
+        }
+    }
+
+    private static AccessTools.FieldRef<MapPawns, Map> mapPawnsMap;
+
+    private static void FreeColonistsCount_Postfix(MapPawns __instance, ref int __result)
+    {
+        if (__result > 0 || mapPawnsMap == null)
+        {
+            return;
+        }
+        __result += MapComponent_BuriedTracker.CountBuriedLivingFreeColonists(mapPawnsMap(__instance));
     }
 
     private static HarmonyMethod Patch(string name, int priority = -1)

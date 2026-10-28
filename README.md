@@ -13,8 +13,8 @@ Roof collapses that don't already kill instantly (constructed roofs, thin rock r
 
 ## Armor and Combat Extended
 
-- **With Combat Extended loaded,** armor protects against the collapse per body part, using CE's per-part (locational) armor values (`ArmorUtilityCE.PartialStat`) for worn and natural armor. The falling rock is treated as a blunt hit whose penetration equals the immunity threshold, and every covering layer subtracts from it, the same way CE's blunt armor works. Damage to a part scales by `1 - protection / threshold`. The death chance scales down with the average protection over the head, neck and torso.
-- **Immunity:** a body part with blunt protection at or above **masterwork cataphract** level takes no damage. The threshold is read from the loaded cataphract armor and helmet (the lower of the two at masterwork quality, so a full masterwork set is immune wherever it covers). With CE that's 75 MPa; vanilla equivalent is 72.5%. If Royalty isn't active, those built-in values are used. A slider scales the threshold.
+- **With Combat Extended loaded,** armor protects against the collapse per body part, using CE's per-part (locational) armor values (`ArmorUtilityCE.PartialStat`) for worn and natural armor. As in CE's own crush handling, a hit to an organ also passes through the natural armor of the outer part around it. The falling rock is treated as a blunt hit whose penetration equals that part's immunity threshold, and every covering layer subtracts from it, the same way CE's blunt armor works. Damage to a part scales by `1 - protection / threshold`. The death chance scales down with the average protection over the head, neck and torso.
+- **Immunity:** a body part whose blunt protection is at least what a full **masterwork cataphract** set (armor + helmet) gives that same part takes no damage. That means a pawn in full masterwork cataphract is immune wherever the set covers them, CE's per-part values included. With CE that's 90 MPa where the armor covers, 75 MPa under the helmet, and 72 MPa on the hands. In vanilla it's 72.5%. Parts the set doesn't cover, and animals or mechs, use the body armor's value. If Royalty isn't active, built-in masterwork cataphract values are used. A slider scales the thresholds.
 - **Without Combat Extended,** armor does not reduce collapse damage. There is an opt-in setting to use vanilla blunt armor ratings the same way.
 - Worn apparel covering a crushed body part takes a share of the damage either way. This can be turned off.
 
@@ -30,7 +30,7 @@ Requires [Harmony](https://steamcommunity.com/workshop/filedetails/?id=200946307
 
 - A Harmony prefix and finalizer on `RoofCollapserImmediate.DropRoofInCellPhaseOne` take pawns and corpses off the cell before vanilla crushes it. Prefixes on `Thing.TakeDamage`, `Pawn.Kill` and `Corpse.Kill` catch anything that lands on the cell partway through the collapse, for example pawns ejected from a destroyed casket. These checks only do anything while a rubble-leaving collapse is being processed.
 - At startup, every impassable thing a roof leaves when it collapses (vanilla: `CollapsedRocks`) gets `CompBuriedContents`, a `ThingComp` that holds the buried things and saves them with the rubble. Those defs are also marked non-save-compressible, so the contents survive save/load.
-- Buried pawns are ticked by a map component, so wounds, bleeding and needs keep running. A pawn who dies under the rubble leaves the corpse there.
+- Buried pawns are ticked by a map component, so wounds, bleeding and needs keep running. A pawn who dies under the rubble leaves the corpse there. Buried-alive colonists count as present on their map, so having everyone buried doesn't end the game.
 - Mining or otherwise destroying the rubble releases everything onto the tile. The pinned hediff is then removed, and survivors get the *buried alive* memory.
 
 ## Building

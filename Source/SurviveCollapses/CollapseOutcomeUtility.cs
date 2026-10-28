@@ -58,10 +58,12 @@ public static class CollapseOutcomeUtility
         return true;
     }
 
-    // Fallback when there was no rubble to bury the pawn in: they were hit where they stand.
+    // Fallback when there was no rubble to bury the pawn in: they were hit where they stand. Pinned for
+    // the duration so the first wound that downs them can't trigger vanilla's death-on-downed roll.
     public static void ResolveWithoutRubble(Pawn pawn, CollapseTier tier)
     {
         bool dies = Rand.Chance(DeathChance(pawn, tier));
+        Pin(pawn);
         try
         {
             if (dies)
@@ -81,6 +83,7 @@ public static class CollapseOutcomeUtility
         {
             pawn.Kill(new DamageInfo(DamageDefOf.Crush, 9999f, 999f, -1f, null, null, null, DamageInfo.SourceCategory.Collapse));
         }
+        Unpin(pawn);
     }
 
     public static void Pin(Pawn pawn)

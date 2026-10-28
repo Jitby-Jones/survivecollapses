@@ -54,8 +54,12 @@ public class SurviveCollapsesMod : Mod
         l.CheckboxLabeled("SC_Settings_ArmorWithoutCE".Translate(), ref s.armorWithoutCombatExtended, "SC_Settings_ArmorWithoutCE_Desc".Translate());
         s.immunityThresholdScale = Percent(l, "SC_Settings_ImmunityScale", s.immunityThresholdScale, 0.25f, 3f);
         l.Label("SC_Settings_ImmunityThreshold".Translate(
-            CollapseArmorUtility.FormatArmor(CollapseArmorUtility.ImmunityThreshold),
-            CollapseArmorUtility.ThresholdSourceLabel));
+            CollapseArmorUtility.FormatArmor(CollapseArmorUtility.BodyThreshold * s.immunityThresholdScale),
+            CollapseArmorUtility.FormatArmor(CollapseArmorUtility.HelmetThreshold * s.immunityThresholdScale)));
+        if (!CollapseArmorUtility.ReferenceArmorLoaded)
+        {
+            l.Label("SC_Settings_ImmunityThresholdFallback".Translate());
+        }
         l.Label(CollapseArmorUtility.ArmorApplies
             ? "SC_Settings_ArmorActive".Translate()
             : "SC_Settings_ArmorInactive".Translate());

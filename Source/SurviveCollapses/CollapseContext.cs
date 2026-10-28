@@ -145,7 +145,7 @@ internal static class CollapseContext
         return false;
     }
 
-    private static bool ShouldBury(Thing t)
+    public static bool ShouldBury(Thing t)
     {
         SurviveCollapsesSettings s = SurviveCollapsesMod.Settings;
         if (t is Pawn pawn)
@@ -158,7 +158,9 @@ internal static class CollapseContext
         }
         if (t is Corpse corpse)
         {
-            return s.preserveCorpses && corpse.InnerPawn != null && !corpse.Destroyed;
+            // Bodies of pawns the player chose to leave to vanilla's fate are crushed with them.
+            return s.preserveCorpses && corpse.InnerPawn != null && !corpse.Destroyed
+                && (s.affectNonPlayerPawns || BurialUtility.IsPlayerRelevant(corpse.InnerPawn));
         }
         return false;
     }
@@ -167,14 +169,22 @@ internal static class CollapseContext
     {
         if (t is Pawn pawn)
         {
-            // Whoever they were carrying shares their fate: bury them as a separate victim.
             Thing carried = pawn.carryTracker?.CarriedThing;
             if (carried is Pawn || carried is Corpse)
             {
-                Thing taken = pawn.carryTracker.innerContainer.Take(carried);
-                if (taken != null)
+                if (ShouldBury(carried))
                 {
-                    frame.extracted.Add(taken);
+                    // Whoever they were carrying shares their fate: bury them as a separate victim.
+                    Thing taken = pawn.carryTracker.innerContainer.Take(carried);
+                    if (taken != null)
+                    {
+                        frame.extracted.Add(taken);
+                    }
+                }
+                else
+                {
+                    // Left to vanilla: drop it on the cell to be crushed with everything else.
+                    pawn.carryTracker.TryDropCarriedThing(frame.cell, ThingPlaceMode.Direct, out _);
                 }
             }
             if (addBattleLog)

@@ -48,14 +48,13 @@
   <SC_Settings_ArmorWithoutCE>Armor protects against collapses (without Combat Extended)</SC_Settings_ArmorWithoutCE>
   <SC_Settings_ArmorWithoutCE_Desc>Off by default: in vanilla, armor does not reduce the damage bodies take from collapses. Enable to use vanilla blunt armor ratings in the same way as with Combat Extended.</SC_Settings_ArmorWithoutCE_Desc>
   <SC_Settings_ImmunityScale>Immunity threshold scale: {0}</SC_Settings_ImmunityScale>
-  <SC_Settings_ImmunityScale_Desc>Scales the blunt protection a body part needs to be immune to collapse damage. 100% equals masterwork cataphract armor. Protection below the threshold reduces damage proportionally.</SC_Settings_ImmunityScale_Desc>
-  <SC_Settings_ImmunityThreshold>Current immunity threshold: {0} blunt protection ({1}).</SC_Settings_ImmunityThreshold>
+  <SC_Settings_ImmunityScale_Desc>Scales the blunt protection a body part needs to be immune to collapse damage. At 100%, each body part needs what a full masterwork cataphract set (armor and helmet) gives that part. Protection below the threshold reduces damage proportionally.</SC_Settings_ImmunityScale_Desc>
+  <SC_Settings_ImmunityThreshold>Immunity threshold, per body part: what masterwork cataphract gives it ({0} where the armor covers, {1} under the helmet).</SC_Settings_ImmunityThreshold>
+  <SC_Settings_ImmunityThresholdFallback>Cataphract armor isn't loaded, so built-in masterwork cataphract values are used.</SC_Settings_ImmunityThresholdFallback>
   <SC_Settings_ArmorActive>Armor currently protects against collapses.</SC_Settings_ArmorActive>
   <SC_Settings_ArmorInactive>Armor currently has no effect on collapse damage.</SC_Settings_ArmorInactive>
   <SC_Settings_DamageApparel>Collapses damage worn apparel</SC_Settings_DamageApparel>
   <SC_Settings_DamageApparel_Desc>Apparel covering a crushed body part takes a share of the damage, whether or not armor protection is in play.</SC_Settings_DamageApparel_Desc>
-  <SC_ThresholdSourceMasterwork>masterwork {0}</SC_ThresholdSourceMasterwork>
-  <SC_ThresholdSourceFallback>built-in masterwork cataphract value; cataphract armor isn't loaded</SC_ThresholdSourceFallback>
 
   <SC_Settings_HeaderRescue>Rescue</SC_Settings_HeaderRescue>
   <SC_Settings_AutoDesignate>Automatically designate digging to buried colonists</SC_Settings_AutoDesignate>

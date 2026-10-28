@@ -38,7 +38,11 @@ public class CompBuriedContents : ThingComp, IThingHolder
 
     public void GetChildHolders(List<IThingHolder> outChildren)
     {
-        ThingOwnerUtility.AppendThingHoldersFromThings(outChildren, GetDirectlyHeldThings());
+        // Every collapsed rock is a holder; most are empty, so keep map-wide holder walks cheap.
+        if (HasContents)
+        {
+            ThingOwnerUtility.AppendThingHoldersFromThings(outChildren, GetDirectlyHeldThings());
+        }
     }
 
     public IEnumerable<Pawn> LivingPawns
@@ -128,6 +132,7 @@ public class CompBuriedContents : ThingComp, IThingHolder
             // about to fill with rubble.
             tracker?.QueueDigOut(parent);
         }
+        Maintain();
     }
 
     // Called every tick by the map's burial tracker while something is buried here.
@@ -137,8 +142,10 @@ public class CompBuriedContents : ThingComp, IThingHolder
         {
             return;
         }
+        int before = innerContainer.Count;
         innerContainer.DoTick();
-        if (parent.IsHashIntervalTick(MaintenanceInterval))
+        // Someone leaving the container (e.g. dying) or the periodic check: tidy up.
+        if (innerContainer.Count != before || parent.IsHashIntervalTick(MaintenanceInterval))
         {
             Maintain();
         }
@@ -167,10 +174,19 @@ public class CompBuriedContents : ThingComp, IThingHolder
             List<Thing> things = parent.Map.thingGrid.ThingsListAtFast(parent.Position);
             for (int i = things.Count - 1; i >= 0; i--)
             {
-                if (things[i] is Corpse loose && innerContainer.Count > 0)
+                if (i >= things.Count || !(things[i] is Corpse loose))
                 {
-                    loose.DeSpawnOrDeselect();
-                    innerContainer.TryAdd(loose, canMergeWithExistingStacks: false);
+                    continue;
+                }
+                Map map = parent.Map;
+                loose.DeSpawnOrDeselect();
+                if (innerContainer.TryAdd(loose, canMergeWithExistingStacks: false))
+                {
+                    MapComponent_BuriedTracker.For(map)?.Register(this);
+                }
+                else
+                {
+                    BurialUtility.PlaceNear(loose, parent.Position, map);
                 }
             }
         }

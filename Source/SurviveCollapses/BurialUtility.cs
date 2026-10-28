@@ -66,9 +66,38 @@ public static class BurialUtility
         }
 
         CollapseContext.ExtractStragglers(frame);
+        CrushLeftovers(frame);
         foreach (Thing t in frame.extracted)
         {
             holder.Bury(t, tier);
+        }
+    }
+
+    // Vanilla obliterates whatever is in a cell that fills with rubble. Anything still there that we
+    // didn't take (pawns or bodies the settings leave to vanilla, dropped after vanilla's own pass) gets
+    // the same treatment instead of being left standing inside the rock.
+    private static void CrushLeftovers(CollapseFrame frame)
+    {
+        List<Thing> snapshot = new List<Thing>(frame.map.thingGrid.ThingsListAtFast(frame.cell));
+        foreach (Thing t in snapshot)
+        {
+            if (!t.Spawned)
+            {
+                continue;
+            }
+            if (t is Pawn pawn && !pawn.Dead)
+            {
+                pawn.Kill(new DamageInfo(DamageDefOf.Crush, 99999f, 999f, -1f, null, null, null, DamageInfo.SourceCategory.Collapse));
+                Corpse body = pawn.Corpse;
+                if (body != null && body.Spawned && body.Position == frame.cell)
+                {
+                    body.Destroy();
+                }
+            }
+            else if (t is Corpse corpse)
+            {
+                corpse.Destroy();
+            }
         }
     }
 
@@ -99,20 +128,35 @@ public static class BurialUtility
             }
             return false;
         }
-        if (t is Pawn pawn)
+        if (!cell.InBounds(map))
         {
-            IntVec3 spot = cell;
-            if (!spot.InBounds(map) || !spot.Standable(map))
-            {
-                if (!CellFinder.TryFindRandomCellNear(cell, map, 6, c => c.Standable(map) && !c.Fogged(map), out spot)
-                    && !CellFinder.TryFindRandomCellNear(cell, map, 30, c => c.Standable(map), out spot))
-                {
-                    spot = CellFinder.RandomClosewalkCellNear(cell, map, 10);
-                }
-            }
-            GenSpawn.Spawn(pawn, spot, map);
+            cell = map.Center;
+        }
+        if (t is Pawn)
+        {
+            GenSpawn.Spawn(t, StandableSpotNear(cell, map), map);
             return true;
         }
-        return GenPlace.TryPlaceThing(t, cell, map, ThingPlaceMode.Near);
+        if (GenPlace.TryPlaceThing(t, cell, map, ThingPlaceMode.Near))
+        {
+            return true;
+        }
+        // Never lose a body to a cramped tunnel: put it down outright.
+        GenSpawn.Spawn(t, StandableSpotNear(cell, map), map);
+        return t.Spawned;
+    }
+
+    private static IntVec3 StandableSpotNear(IntVec3 cell, Map map)
+    {
+        if (cell.Standable(map))
+        {
+            return cell;
+        }
+        if (CellFinder.TryFindRandomCellNear(cell, map, 6, c => c.Standable(map) && !c.Fogged(map), out IntVec3 spot)
+            || CellFinder.TryFindRandomCellNear(cell, map, 30, c => c.Standable(map), out spot))
+        {
+            return spot;
+        }
+        return CellFinder.RandomClosewalkCellNear(cell, map, 10);
     }
 }

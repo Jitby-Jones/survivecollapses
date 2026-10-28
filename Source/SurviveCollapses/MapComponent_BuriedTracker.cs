@@ -185,6 +185,24 @@ public class MapComponent_BuriedTracker : MapComponent
         }
     }
 
+    public static int CountBuriedLivingFreeColonists(Map map)
+    {
+        MapComponent_BuriedTracker tracker = map?.GetComponent<MapComponent_BuriedTracker>();
+        if (tracker == null || tracker.holders.Count == 0)
+        {
+            return 0;
+        }
+        int count = 0;
+        foreach ((Pawn pawn, Thing _) in tracker.BuriedLivingPawns())
+        {
+            if (pawn.IsFreeColonist)
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
     public IEnumerable<(Pawn pawn, Thing rubble)> BuriedLivingPawns()
     {
         for (int i = 0; i < holders.Count; i++)

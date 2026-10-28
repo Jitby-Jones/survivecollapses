@@ -264,37 +264,58 @@ public static class CrushInjuryUtility
             return 0f;
         }
 
-        // Vanilla scales external violence by IncomingDamageFactor (e.g. the Tough trait) after we hand
-        // the hit over, so account for it here.
-        float damageFactor = DamageDefOf.Crush.ExternalViolenceFor(pawn)
-            ? Mathf.Max(0.01f, pawn.GetStatValue(StatDefOf.IncomingDamageFactor))
-            : 1f;
+        DamageInfo dinfo = new DamageInfo(DamageDefOf.Crush, amount, 0f, -1f, null, part, null, DamageInfo.SourceCategory.Collapse);
+        dinfo.SetIgnoreArmor(true);
+        dinfo.SetAllowDamagePropagation(false);
+        dinfo.SetIgnoreInstantKillProtection(!survivor);
+
+        // Vanilla still scales the hit after we hand it over (IncomingDamageFactor e.g. from Tough, hediff
+        // damage factors, race damage multipliers). "expected" is the best guess at what lands; "guard"
+        // assumes every factor above 1 applies and none below 1 does, so survivor caps are never too high.
+        DamageFactors(pawn, dinfo, out float expectedFactor, out float guardFactor);
         float partHealth = pawn.health.hediffSet.GetPartHealth(part);
-        if (amount * damageFactor >= partHealth)
+        if (amount * expectedFactor >= partHealth)
         {
             // Destroying the part: no need to pile extra severity on top of what destroys it.
-            amount = Mathf.Min(amount, (partHealth + 0.5f) / damageFactor);
+            amount = Mathf.Min(amount, (partHealth + 0.5f) / expectedFactor);
         }
         if (survivor)
         {
-            amount = SurvivableAmount(pawn, part, amount, damageFactor);
+            amount = SurvivableAmount(pawn, part, amount, expectedFactor, guardFactor);
             if (amount < 0.5f)
             {
                 return 0f;
             }
         }
 
-        DamageInfo dinfo = new DamageInfo(DamageDefOf.Crush, amount, 0f, -1f, null, part, null, DamageInfo.SourceCategory.Collapse);
-        dinfo.SetIgnoreArmor(true);
-        dinfo.SetAllowDamagePropagation(false);
-        dinfo.SetIgnoreInstantKillProtection(!survivor);
+        dinfo.SetAmount(amount);
         pawn.TakeDamage(dinfo);
         return amount;
     }
 
+    private static void DamageFactors(Pawn pawn, DamageInfo dinfo, out float expected, out float guard)
+    {
+        float stat = DamageDefOf.Crush.ExternalViolenceFor(pawn) ? pawn.GetStatValue(StatDefOf.IncomingDamageFactor) : 1f;
+        float hediffs = pawn.health.hediffSet.FactorForDamage(dinfo);
+        float race = 1f;
+        List<DamageMultiplier> multipliers = pawn.def.damageMultipliers;
+        if (multipliers != null)
+        {
+            for (int i = 0; i < multipliers.Count; i++)
+            {
+                if (multipliers[i].damageDef == DamageDefOf.Crush)
+                {
+                    race *= multipliers[i].multiplier;
+                }
+            }
+        }
+        expected = Mathf.Max(0.01f, stat * hediffs * race);
+        guard = Mathf.Max(1f, stat) * Mathf.Max(1f, hediffs) * Mathf.Max(1f, race);
+    }
+
     // Shrinks a hit until it can't kill: lethal parts keep a margin of health, total injury stays well
     // under the lethal threshold, and vanilla's own death simulation must agree.
-    private static float SurvivableAmount(Pawn pawn, BodyPartRecord part, float amount, float damageFactor)
+    private static float SurvivableAmount(Pawn pawn, BodyPartRecord part, float amount, float expectedFactor, float guardFactor)
     {
         HediffSet set = pawn.health.hediffSet;
         float partHealth = set.GetPartHealth(part);
@@ -306,7 +327,7 @@ public static class CrushInjuryUtility
         // Fatal to lose, or (the spine) permanently paralysing: badly hurt, never destroyed.
         if (IsLethalToDestroy(pawn, part) || (part.def.tags != null && part.def.tags.Contains(BodyPartTagDefOf.Spine)))
         {
-            amount = Mathf.Min(amount, partHealth * (1f - SurvivorLethalPartFloor) / damageFactor);
+            amount = Mathf.Min(amount, partHealth * (1f - SurvivorLethalPartFloor) / guardFactor);
         }
 
         // Wounds on a destroyed part are replaced by the missing part, so only wounds on parts that
@@ -315,16 +336,16 @@ public static class CrushInjuryUtility
         HediffDef injury = HealthUtility.GetHediffDefFromDamage(DamageDefOf.Crush, pawn, part);
         for (int i = 0; i < 8; i++)
         {
-            bool destroysPart = amount * damageFactor >= partHealth;
+            bool destroysPart = amount * expectedFactor >= partHealth;
             if (!destroysPart)
             {
-                amount = Mathf.Min(amount, budget / damageFactor);
+                amount = Mathf.Min(amount, budget / guardFactor);
             }
             if (amount < 0.5f)
             {
                 return 0f;
             }
-            if (!pawn.health.WouldDieAfterAddingHediff(injury, part, amount * damageFactor))
+            if (!pawn.health.WouldDieAfterAddingHediff(injury, part, amount * guardFactor))
             {
                 return amount;
             }
