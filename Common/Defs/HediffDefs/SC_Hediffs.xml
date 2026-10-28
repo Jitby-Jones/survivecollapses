@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <!--
+    Applied to every living pawn trapped under collapse rubble and removed when they are dug out.
+    Capping Moving at 0 downs the pawn regardless of pain or pain resistance.
+    The bleed factor below is overwritten at startup by the "Bleeding while pinned" mod setting.
+  -->
+  <HediffDef>
+    <defName>SC_PinnedUnderRubble</defName>
+    <label>pinned under rubble</label>
+    <description>Trapped beneath collapsed rock. The weight of the rubble makes any movement impossible, though the pressure slows bleeding. Mine out the collapsed rocks to free them.</description>
+    <hediffClass>HediffWithComps</hediffClass>
+    <defaultLabelColor>(0.85, 0.6, 0.35)</defaultLabelColor>
+    <isBad>true</isBad>
+    <tendable>false</tendable>
+    <makesSickThought>false</makesSickThought>
+    <everCurableByItem>false</everCurableByItem>
+    <preventsCrawling>true</preventsCrawling>
+    <scenarioCanAdd>false</scenarioCanAdd>
+    <comps>
+      <li Class="SurviveCollapses.HediffCompProperties_PinnedUnderRubble" />
+    </comps>
+    <stages>
+      <li>
+        <painOffset>0.1</painOffset>
+        <totalBleedFactor>0.35</totalBleedFactor>
+        <capMods>
+          <li>
+            <capacity>Moving</capacity>
+            <setMax>0</setMax>
+          </li>
+        </capMods>
+      </li>
+    </stages>
+  </HediffDef>
+
+</Defs>

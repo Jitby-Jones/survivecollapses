@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+  <!-- Letters & messages -->
+  <SC_LetterLabel>Buried in a cave-in</SC_LetterLabel>
+  <SC_LetterTextAlive>Collapsing rock has buried the following under the rubble:\n\n{0}\n\nThose still alive are pinned and bleeding. Mine out the collapsed rocks to reach them before it's too late. Make sure the roof around the dig is supported, or it may come down again.</SC_LetterTextAlive>
+  <SC_LetterTextDead>Collapsing rock has buried the following under the rubble:\n\n{0}\n\nMine out the collapsed rocks to recover the bodies.</SC_LetterTextDead>
+  <SC_LetterLineAlive>{0}: alive, badly injured</SC_LetterLineAlive>
+  <SC_LetterLineKilled>{0}: killed</SC_LetterLineKilled>
+  <SC_LetterLineBody>the body of {0}</SC_LetterLineBody>
+  <SC_LetterLineOthers>others: {0} alive, {1} killed</SC_LetterLineOthers>
+  <SC_MessageOthersBuried>{0} have been buried alive under collapsed rocks.</SC_MessageOthersBuried>
+  <SC_MessageDugOutAlive>{0} has been dug out of the rubble alive.</SC_MessageDugOutAlive>
+  <SC_MessageBodyRecovered>The body of {0} has been recovered from the rubble.</SC_MessageBodyRecovered>
+
+  <!-- Inspect pane -->
+  <SC_InspectBuriedHeader>Buried beneath:</SC_InspectBuriedHeader>
+  <SC_InspectAlive>{0} (alive)</SC_InspectAlive>
+  <SC_InspectAliveBleeding>{0} (alive, bleeds out in {1})</SC_InspectAliveBleeding>
+  <SC_InspectDead>{0} (dead)</SC_InspectDead>
+
+  <!-- Alert -->
+  <SC_AlertLabelSingle>Buried alive: {0}</SC_AlertLabelSingle>
+  <SC_AlertLabelMulti>Buried alive ({0})</SC_AlertLabelMulti>
+  <SC_AlertDesc>These are trapped alive under collapsed rocks:\n\n{0}\n\nThey are pinned and can't move. Their wounds bleed more slowly under the weight of the rubble, but they will die if left there. Mine out the collapsed rocks to free them.</SC_AlertDesc>
+
+  <!-- Settings -->
+  <SC_SettingsCategory>Survive Collapses</SC_SettingsCategory>
+  <SC_Settings_HeaderOutcome>Outcome</SC_Settings_HeaderOutcome>
+  <SC_Settings_MountainDeathChance>Death chance under a collapsing overhead mountain: {0}</SC_Settings_MountainDeathChance>
+  <SC_Settings_MountainDeathChance_Desc>Chance that a pawn caught under a collapsing overhead mountain is killed. Everyone else survives with heavy injuries, trapped under the collapsed rocks. With armor in play, protection over the head, neck and torso lowers this.</SC_Settings_MountainDeathChance_Desc>
+  <SC_Settings_RoofDeathChance>Death chance under other roofs that collapse into rubble: {0}</SC_Settings_RoofDeathChance>
+  <SC_Settings_RoofDeathChance_Desc>Only collapses that bury the tile under rubble (which obliterate pawns in vanilla) are changed by this mod; in vanilla that is the overhead mountain. This chance applies to any other roof that collapses into rubble, such as rock roofs added by other mods. Collapses that don't leave rubble (constructed and thin rock roofs) keep their vanilla behavior.</SC_Settings_RoofDeathChance_Desc>
+  <SC_Settings_InjurySeverity>Injury severity: {0}</SC_Settings_InjurySeverity>
+  <SC_Settings_InjurySeverity_Desc>Scales crush damage and the odds of extra crushed limbs and organs. Survivors are always kept alive no matter how high this is set.</SC_Settings_InjurySeverity_Desc>
+  <SC_Settings_BuriedBleedFactor>Bleeding while pinned: {0}</SC_Settings_BuriedBleedFactor>
+  <SC_Settings_BuriedBleedFactor_Desc>Bleeding rate of pinned pawns compared to normal. The weight of the rubble compresses their wounds; once dug out they bleed normally again.</SC_Settings_BuriedBleedFactor_Desc>
+  <SC_Settings_AffectNonPlayerPawns>Raiders, visitors and wildlife can survive too</SC_Settings_AffectNonPlayerPawns>
+  <SC_Settings_AffectNonPlayerPawns_Desc>If disabled, only your colonists, prisoners, slaves and animals get a chance to survive; everyone else is crushed as in vanilla.</SC_Settings_AffectNonPlayerPawns_Desc>
+  <SC_Settings_PreserveCorpses>Bury corpses already lying under the collapse</SC_Settings_PreserveCorpses>
+  <SC_Settings_PreserveCorpses_Desc>Corpses on a collapsing tile are buried in the rubble instead of being destroyed, so they can be dug up.</SC_Settings_PreserveCorpses_Desc>
+
+  <SC_Settings_HeaderArmor>Armor</SC_Settings_HeaderArmor>
+  <SC_Settings_CEDetected>Combat Extended detected: CE's per-part armor values are used.</SC_Settings_CEDetected>
+  <SC_Settings_CENotDetected>Combat Extended not detected.</SC_Settings_CENotDetected>
+  <SC_Settings_ArmorWithCE>Armor protects against collapses (Combat Extended)</SC_Settings_ArmorWithCE>
+  <SC_Settings_ArmorWithCE_Desc>With Combat Extended loaded, worn and natural blunt armor over each body part reduces the crush damage it takes and lowers the death chance. Parts protected at or above the immunity threshold take no damage.</SC_Settings_ArmorWithCE_Desc>
+  <SC_Settings_ArmorWithoutCE>Armor protects against collapses (without Combat Extended)</SC_Settings_ArmorWithoutCE>
+  <SC_Settings_ArmorWithoutCE_Desc>Off by default: in vanilla, armor does not reduce the damage bodies take from collapses. Enable to use vanilla blunt armor ratings in the same way as with Combat Extended.</SC_Settings_ArmorWithoutCE_Desc>
+  <SC_Settings_ImmunityScale>Immunity threshold scale: {0}</SC_Settings_ImmunityScale>
+  <SC_Settings_ImmunityScale_Desc>Scales the blunt protection a body part needs to be immune to collapse damage. 100% equals masterwork cataphract armor. Protection below the threshold reduces damage proportionally.</SC_Settings_ImmunityScale_Desc>
+  <SC_Settings_ImmunityThreshold>Current immunity threshold: {0} blunt protection ({1}).</SC_Settings_ImmunityThreshold>
+  <SC_Settings_ArmorActive>Armor currently protects against collapses.</SC_Settings_ArmorActive>
+  <SC_Settings_ArmorInactive>Armor currently has no effect on collapse damage.</SC_Settings_ArmorInactive>
+  <SC_Settings_DamageApparel>Collapses damage worn apparel</SC_Settings_DamageApparel>
+  <SC_Settings_DamageApparel_Desc>Apparel covering a crushed body part takes a share of the damage, whether or not armor protection is in play.</SC_Settings_DamageApparel_Desc>
+  <SC_ThresholdSourceMasterwork>masterwork {0}</SC_ThresholdSourceMasterwork>
+  <SC_ThresholdSourceFallback>built-in masterwork cataphract value; cataphract armor isn't loaded</SC_ThresholdSourceFallback>
+
+  <SC_Settings_HeaderRescue>Rescue</SC_Settings_HeaderRescue>
+  <SC_Settings_AutoDesignate>Automatically designate digging to buried colonists</SC_Settings_AutoDesignate>
+  <SC_Settings_AutoDesignate_Desc>Marks the rubble over your buried people (alive or dead), and the shortest way through the rock to reach them, for mining.</SC_Settings_AutoDesignate_Desc>
+  <SC_Settings_SendLetters>Send a letter when your people are buried</SC_Settings_SendLetters>
+  <SC_Settings_SendLetters_Desc>A letter lists who was buried, who survived and where they are.</SC_Settings_SendLetters_Desc>
+  <SC_Settings_BuriedAliveThought>"Buried alive" mood penalty after being dug out</SC_Settings_BuriedAliveThought>
+  <SC_Settings_BuriedAliveThought_Desc>Survivors remember being trapped under the rubble (-12 mood for 6 days).</SC_Settings_BuriedAliveThought_Desc>
+  <SC_Settings_Reset>Reset to defaults</SC_Settings_Reset>
+
+</LanguageData>

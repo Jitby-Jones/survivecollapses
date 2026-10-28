@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+  <name>Survive Collapses</name>
+  <author>Jitby-Jones</author>
+  <packageId>JitbyJones.SurviveCollapses</packageId>
+  <url>https://github.com/Jitby-Jones/survivecollapses</url>
+  <modVersion>1.0.0</modVersion>
+  <supportedVersions>
+    <li>1.6</li>
+    <li>1.7</li>
+  </supportedVersions>
+  <modDependencies>
+    <li>
+      <packageId>brrainz.harmony</packageId>
+      <displayName>Harmony</displayName>
+      <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+      <downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
+    </li>
+  </modDependencies>
+  <loadAfter>
+    <li>brrainz.harmony</li>
+    <li>Ludeon.RimWorld</li>
+    <li>Ludeon.RimWorld.Royalty</li>
+    <li>CETeam.CombatExtended</li>
+  </loadAfter>
+  <description>Collapses that fill the ground with collapsed rocks (overhead mountain cave-ins) no longer erase whoever is standing underneath.
+
+Instead of being instantly killed and deleted, pawns caught in such a collapse are buried under the collapsed rocks:
+
+ - Most survive with heavy crush injuries: crushed (destroyed) limbs, crushed organs, cracked bones and deep bruising. Mountain collapses are deadly, but survivable.
+ - Some are killed. Their bodies stay buried under the rubble, mangled (missing limbs, crushed organs), so you can dig them out and give them a proper burial.
+ - Survivors are pinned and forced down while buried, even with full pain immunity. The weight of the rubble slows their bleeding, but the clock is ticking.
+ - Mine the collapsed rocks to free them. Rubble over your people (and the shortest way to reach it) is designated for mining automatically, and an alert tracks everyone still trapped.
+
+Roof collapses that don't instantly kill in vanilla (constructed and thin rock roofs) are left untouched.
+
+Armor (Combat Extended): with Combat Extended loaded, worn and natural armor protects the body parts it covers, using CE's per-part (locational) armor values. Protection scales damage down and lowers the death chance; body parts with blunt protection at or above masterwork cataphract level are immune. Without Combat Extended, armor does not reduce collapse damage (this can be changed in the mod settings).
+
+Death chances, injury severity, bleeding while pinned, the armor threshold and more are configurable in the mod settings.
+
+Safe to add to an existing save. Removing it while pawns are buried will lose those pawns.</description>
+</ModMetaData>

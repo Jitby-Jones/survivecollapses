@@ -1,0 +1,7 @@
+# Build intermediates
+Source/**/obj/
+Source/**/bin/
+*.pdb
+*.user
+.vs/
+.idea/
